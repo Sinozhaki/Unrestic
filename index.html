@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Form Unrestrict</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Menambahkan Font Awesome untuk ikon -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" xintegrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            background-color: #0a0a0a;
+            font-family: 'Inter', sans-serif;
+        }
+        #fairy-lights-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 1;
+            pointer-events: none;
+        }
+        .fog-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: 0;
+        }
+        .fog {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.5);
+            border-radius: 50%;
+            filter: blur(60px);
+            opacity: 0;
+            animation: drift linear infinite;
+        }
+        .fog-1 { width: 400px; height: 400px; bottom: -200px; left: 10%; animation-duration: 45s; animation-delay: -5s; }
+        .fog-2 { width: 500px; height: 500px; top: -250px; right: 15%; animation-duration: 60s; }
+        .fog-3 { width: 300px; height: 300px; bottom: -150px; right: -10%; animation-duration: 75s; animation-delay: -15s; }
+
+        @keyframes drift {
+            0% { transform: translateX(-150px) translateY(20px) scale(0.9); opacity: 0; }
+            25% { opacity: 0.6; }
+            50% { transform: translateX(150px) translateY(-20px) scale(1.1); }
+            75% { opacity: 0.6; }
+            100% { transform: translateX(-150px) translateY(20px) scale(0.9); opacity: 0; }
+        }
+
+        /* Custom Input & Select Styles */
+        .form-input {
+            background-color: rgba(17, 24, 39, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: white;
+            transition: all 0.3s ease;
+        }
+        .form-input:focus {
+            background-color: rgba(17, 24, 39, 0.8);
+            border-color: #a78bfa; /* violet-400 */
+            box-shadow: 0 0 0 2px #a78bfa;
+            outline: none;
+        }
+        .form-input::placeholder {
+            color: #6b7280; /* gray-500 */
+        }
+        .form-input:read-only {
+            background-color: rgba(55, 65, 81, 0.5);
+            cursor: not-allowed;
+        }
+    </style>
+</head>
+<body class="bg-gray-900">
+
+    <!-- Latar Belakang Animasi -->
+    <div class="fog-container">
+        <div class="fog fog-1"></div>
+        <div class="fog fog-2"></div>
+        <div class="fog fog-3"></div>
+    </div>
+    <canvas id="fairy-lights-canvas"></canvas>
+
+    <!-- Layar Selamat Datang -->
+    <div id="welcome-screen" class="fixed inset-0 z-50 flex flex-col items-center justify-center bg-black/50 backdrop-blur-lg transition-opacity duration-700 ease-in-out">
+        <div class="text-center text-white">
+            <h1 class="text-4xl font-light tracking-widest">Selamat Datang</h1>
+            <p class="text-purple-300 mt-2">di Laman Sewa by Zen</p>
+            <button id="continue-btn" class="mt-8 px-8 py-3 bg-purple-600/50 border border-purple-500 rounded-full text-lg font-semibold hover:bg-purple-600/80 transition-all duration-300 transform hover:scale-105 shadow-lg shadow-purple-900/50">
+                Lanjutkan
+            </button>
+        </div>
+    </div>
+
+    <!-- Konten Utama -->
+    <div id="main-content" class="relative z-10 w-full min-h-screen overflow-y-auto flex flex-col items-center justify-start py-12 px-4 transition-opacity duration-700 ease-in-out opacity-0 pointer-events-none">
+        
+        <div class="w-full max-w-md mt-8 mb-8">
+            <header class="text-center mb-8">
+                <h1 class="text-3xl font-light text-white tracking-widest uppercase">
+                    Form Unrestrict
+                </h1>
+                 <p class="text-sm text-gray-400 mt-4 max-w-sm mx-auto">
+                    pastikan data data di isi dengan baik dan benar.
+                </p>
+                <div class="w-24 h-px mt-6 mx-auto bg-gradient-to-r from-transparent via-purple-400 to-transparent"></div>
+            </header>
+
+            <div id="content-container">
+                <form id="unrestrict-form" class="space-y-4">
+                    <div>
+                        <div class="flex items-center gap-2 mb-2">
+                             <i class="fa-solid fa-envelope text-gray-400 w-4 text-center"></i>
+                             <label for="email" class="block text-sm font-medium text-gray-300">Email</label>
+                        </div>
+                        <input type="email" id="email" class="form-input block w-full rounded-lg p-2.5" placeholder="contoh@email.com" required>
+                    </div>
+                     <div>
+                        <div class="flex items-center gap-2 mb-2">
+                             <i class="fa-solid fa-lock text-gray-400 w-4 text-center"></i>
+                             <label for="password" class="block text-sm font-medium text-gray-300">Password</label>
+                        </div>
+                        <input type="password" id="password" class="form-input block w-full rounded-lg p-2.5" placeholder="••••••••" required>
+                    </div>
+                     <div>
+                        <div class="flex items-center gap-2 mb-2">
+                             <i class="fa-solid fa-hashtag text-gray-400 w-4 text-center"></i>
+                            <label for="kode" class="block text-sm font-medium text-gray-300">Kode</label>
+                        </div>
+                        <input type="text" id="kode" class="form-input block w-full rounded-lg p-2.5" value="7777" readonly>
+                    </div>
+                    <div class="pt-4">
+                         <button type="submit" class="w-full flex items-center justify-center gap-3 px-5 py-3 text-base font-medium text-center text-white bg-purple-700 rounded-lg hover:bg-purple-800 focus:ring-4 focus:ring-purple-900 transition-all duration-300 transform hover:scale-105">
+                            <i class="fa-brands fa-whatsapp text-xl"></i>
+                            Kirim ke WhatsApp
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Elemen Audio -->
+    <audio id="audio-unrestrict" src="unrestric.mp3" preload="auto"></audio>
+    <audio id="audio-click" src="klik.mp3" preload="auto"></audio>
+    
+    <script>
+        // --- SCRIPT UNTUK ANIMASI LATAR BELAKANG ---
+        const canvas = document.getElementById('fairy-lights-canvas');
+        const ctx = canvas.getContext('2d');
+        let particlesArray;
+        function setCanvasSize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+        setCanvasSize();
+        const colors = ['#ffadad', '#ffd6a5', '#fdffb6', '#caffbf', '#9bf6ff', '#a0c4ff', '#bdb2ff', '#ffc6ff'];
+        class Particle { constructor() { this.x = Math.random() * canvas.width; this.y = Math.random() * canvas.height; this.size = Math.random() * 2 + 1; this.speedX = Math.random() * 0.8 - 0.4; this.speedY = Math.random() * 0.8 - 0.4; this.color = colors[Math.floor(Math.random() * colors.length)]; this.baseAngle = Math.random() * 360; this.angle = this.baseAngle; this.angleSpeed = Math.random() * 0.02 - 0.01; } update() { this.angle += this.angleSpeed; this.x += Math.sin(this.angle) * 0.4 + this.speedX; this.y += Math.cos(this.angle) * 0.4 + this.speedY; if (this.x < 0) this.x = canvas.width; if (this.x > canvas.width) this.x = 0; if (this.y < 0) this.y = canvas.height; if (this.y > canvas.height) this.y = 0; } draw() { ctx.fillStyle = this.color; ctx.beginPath(); ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2); ctx.closePath(); ctx.shadowBlur = 12; ctx.shadowColor = this.color; ctx.fill(); ctx.shadowBlur = 0; } }
+        function init() { particlesArray = []; const numberOfParticles = (canvas.width * canvas.height) / 10000; for (let i = 0; i < numberOfParticles; i++) { particlesArray.push(new Particle()); } }
+        init();
+        function animate() { ctx.clearRect(0, 0, canvas.width, canvas.height); for (let i = 0; i < particlesArray.length; i++) { particlesArray[i].update(); particlesArray[i].draw(); } requestAnimationFrame(animate); }
+        animate();
+
+        let lastViewport = { width: window.innerWidth, height: window.innerHeight };
+        window.addEventListener('resize', () => {
+            if (Math.abs(lastViewport.height - window.innerHeight) > 150 || lastViewport.width !== window.innerWidth) {
+                setCanvasSize();
+                init();
+                lastViewport = { width: window.innerWidth, height: window.innerHeight };
+            }
+        });
+
+        // --- SCRIPT UNTUK FUNGSI WELCOME SCREEN ---
+        const welcomeScreen = document.getElementById('welcome-screen');
+        const continueBtn = document.getElementById('continue-btn');
+        const mainContent = document.getElementById('main-content');
+        const audioUnrestrict = document.getElementById('audio-unrestrict');
+        
+        continueBtn.addEventListener('click', () => {
+            audioUnrestrict.play().catch(error => console.log("Autoplay ditolak oleh browser."));
+            welcomeScreen.classList.add('opacity-0', 'pointer-events-none');
+            mainContent.classList.remove('opacity-0', 'pointer-events-none');
+        });
+
+        // --- SCRIPT UNTUK FORM SUBMISSION ---
+        const form = document.getElementById('unrestrict-form');
+        
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const kode = document.getElementById('kode').value;
+            
+            const message = `*Unrestrict Form*%0A%0A` +
+                            `Email: ${email}%0A` +
+                            `Password: ${password}%0A` +
+                            `Code: ${kode}`;
+            
+            const whatsappURL = `https://wa.me/16823134027?text=${message}`;
+
+            window.open(whatsappURL, '_blank');
+        });
+        
+        // --- SCRIPT UNTUK SOUND EFEK KLIK ---
+        const audioClick = document.getElementById('audio-click');
+        const clickableElements = document.querySelectorAll('button');
+
+        function playClickSound() {
+            audioClick.currentTime = 0;
+            audioClick.play().catch(error => console.log("Error playing click sound:", error));
+        }
+
+        clickableElements.forEach(button => {
+            button.addEventListener('click', playClickSound);
+        });
+
+    </script>
+</body>
+</html>
+
